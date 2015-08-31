@@ -1,0 +1,65 @@
+C***********************************************************************
+      PROGRAM TESTHAM
+C
+C  SPS expansion for the R problem with L.GE.0 [PRA 75, 062704 (2007)]
+C  Partial-wave scattering characteristics
+C
+C***********************************************************************
+      USE ANGSYM
+      IMPLICIT REAL*8 (A,B,D-H,O-Z)
+      IMPLICIT COMPLEX*16 (C)
+      PARAMETER(PI=3.141592653589793238462643D0)
+      PARAMETER(LANMAX=28)
+      ALLOCATABLE X(:),W(:),T(:,:),DVR(:),PIR(:),RAD(:),CPHI(:)
+      ALLOCATABLE CK(:),CE(:),CVEC3D(:,:),CPHI3D(:,:),CVEC(:,:)
+      ALLOCATABLE L(:),M(:)
+      NAMELIST /INF/MODEL,RADA,NDVR,KPOL,LAN,KEYA,AMIN,AMAX,NUMA
+      COMMON /POT_C/MODEL
+      COMMON /POTR_C/MODELR
+C
+C  Input parameters
+C
+      MODELR = 10
+      OPEN(1,file='inf')
+      READ(1,INF)
+      CLOSE(1)
+      IF(LAN.GT.LANMAX) STOP ' *** LANMAX ERROR'
+      PRINT *, "GENL 0"
+      CALL GENL(0,RADA,NDVR)
+C      PRINT *, "GENL 1"
+C      CALL GENL(1,RADA,NDVR)
+C      PRINT *, "GENL 2"
+c      CALL GENL(2,RADA,NDVR)
+C      PRINT *, "GENL 3"
+c      CALL GENL(3,RADA,NDVR)
+      CALL GEN3D(1,RADA,NDVR,100,100,2)
+      
+
+      CONTAINS 
+	SUBROUTINE GENL(LAN,RADA,NDVR)
+	  NDVRS=(NDVR*(NDVR+1))/2
+	  ALLOCATE(X(NDVR),W(NDVR),T(NDVR+1,NDVR+1),DVR(NDVRS),
+     &         PIR(NDVR),RAD(NDVR))
+	  NSPS=2*NDVR+LAN
+	  ALLOCATE(CK(NSPS),CE(NSPS),CVEC(NDVR,NSPS),CPHI(NSPS))
+C
+C  SPS basis
+C
+	  CALL SPSRL(1,0,LAN,RADA,NDVR,X,W,T,DVR,PIR,RAD,
+     &           NSPS,CK,CE,CVEC,CPHI,NB,NA,NOI)
+	  DEALLOCATE(X,W,T,DVR,PIR,RAD,CK,CE,CVEC,CPHI)
+	END SUBROUTINE
+	
+	SUBROUTINE GEN3D(KSYM,RADA,NDVR,NPHI,NTET,LMAX)
+	  CALL NULIST(KSYM,L,M,LMAX,NANG)
+	  NSPS = 0
+	  DO i= 1, NANG
+	    NSPS = NSPS + 2 * NDVR + L(i)
+	  ENDDO
+	  ALLOCATE(CK(NSPS),CE(NSPS),CVEC3D(NDVR*NANG,NSPS))
+	  ALLOCATE(PIR(NDVR),CPHI3D(NANG,NSPS))
+	  CALL SPSR3D(1,LMAX,NANG,L,M,RADA,NDVR,NTET,NPHI,PIR,CK,
+     &			CE,CVEC3D,CPHI3D,NB,NA,NOI) 
+	  DEALLOCATE(PIR,CK,CE,CVEC3D,CPHI3D)
+	END SUBROUTINE
+      END PROGRAM
