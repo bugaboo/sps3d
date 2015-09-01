@@ -7,7 +7,7 @@ C-----------------------------------------------------------------------
       USE ANGSYM
       IMPLICIT REAL*8 (A,B,D-H,O-Z)
       IMPLICIT COMPLEX*16 (C)
-c      PARAMETER(LMAX=28)
+      PARAMETER(KTEST=1)
       DIMENSION CZER(LMAX,LMAX)
       ALLOCATABLE X(:),W(:),T(:,:),DVR(:)
       DIMENSION CK(*),CE(*),CVEC(NDVR*NANG,*),CPHI(NANG,*),PIR(*)
@@ -59,7 +59,6 @@ C
 	  V(i,j,k) = VT(i,j)
 	  ENDDO
 	ENDDO
-c	PRINT *, "Calculating V   k=", k
       ENDDO
 C
 C  Setting up SPS Hamiltonian
@@ -72,7 +71,6 @@ C
       ENDDO
       nnu = 0
       DO nu = 1, NANG
-C	PRINT *, "nu=", nu
         DO i=1,NDVR
 	  HAM(nnu+i, nnu+NDVR+i)=1.D0
 	ENDDO
@@ -123,12 +121,12 @@ c	  PRINT *, ZER, L(nu),L(nu)/2+1
 	DO mu = 1, NANG
 	  DO i = 1,NDVR
 	    HAM(nnu+NDVR+i,nmu+i)=HAM(nnu+NDVR+i,nmu+i)-2.D0*V(nu,mu,i)
-	    if (nu.EQ.mu .AND. V(nu,mu,i).GT.1.D-12) PRINT *, V(nu,mu,i)
 	  ENDDO
 	nmu = nmu + 2*NDVR + L(mu)
 	ENDDO
 	nnu = nnu + 2*NDVR + L(nu)
       ENDDO
+      IF (KTEST.EQ.1) THEN
       SELECT CASE(L(1))
 	CASE(0)
 	OPEN(2,FILE='ham3d0')
@@ -145,6 +143,7 @@ c	  PRINT *, ZER, L(nu),L(nu)/2+1
 	ENDDO
       ENDDO
       CLOSE(2)
+      ENDIF
 c      RETURN
 C
 C  Solution of the SPS EVP
@@ -233,12 +232,8 @@ C
 	  CPHI(nu,n)=CPHI(nu,n)*RADA
         ENDDO
       ENDDO
-      PRINT *, "CPHI 3D"
-      DO i=1,NSPS
-	if (CDABS(CPHI(1,i)).GT.1.D-19)PRINT *, CPHI(1,i), CPHI(2,i)
-      ENDDO
       
-  
+      IF (KTEST.EQ.1) THEN
 C
 C  Checking orthogonality
 C
@@ -267,6 +262,7 @@ c	  PRINT *, CSUMC, n, k
 c	  IF (n.NE.k .AND.TMP.GT.1.D-12) PRINT *, CSUMC,n,k,CK(n),CK(k)
 	ENDDO
       ENDDO
+      ENDIF
 
       IF(KOUT.EQ.0) RETURN
 C
