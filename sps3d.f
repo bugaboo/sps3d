@@ -7,14 +7,13 @@ C-----------------------------------------------------------------------
       USE ANGSYM
       IMPLICIT REAL*8 (A,B,D-H,O-Z)
       IMPLICIT COMPLEX*16 (C)
-      PARAMETER(KTEST=1)
+      PARAMETER(KTEST=0)
       DIMENSION CZER(LMAX,LMAX)
       ALLOCATABLE X(:),W(:),T(:,:),DVR(:)
       DIMENSION CK(*),CE(*),CVEC(NDVR*NANG,*),CPHI(NANG,*),PIR(*)
       DIMENSION L(*),M(*)
       ALLOCATABLE HAM(:,:),VKR(:),VKI(:),VK(:),WK(:,:),CWK(:,:),RAD(:)
       ALLOCATABLE V(:,:,:), VT(:,:)
-C      INTEGER, ALLOCATABLE :: L(:), M(:)
       
 C
 C  Allocation
@@ -57,7 +56,7 @@ C
 	DO i=1,NANG
 	  DO j=1,NANG
 	  V(i,j,k) = VT(i,j)
-	  ENDDO
+	  ENDDO 
 	ENDDO
       ENDDO
 C
@@ -161,6 +160,7 @@ c      DEALLOCATE(CWK)
 C --- LAPACK
       NVK=10*NSPS
       ALLOCATE(VKR(NSPS),VKI(NSPS),VK(NVK),WK(NSPS,NSPS))
+      PRINT *, "Call DGEEV"
       CALL DGEEV('N','V',NSPS,HAM,NSPS,VKR,VKI,ERR,1,WK,NSPS,
      &           VK,NVK,info)
       DO n=1,NSPS
@@ -258,8 +258,7 @@ C
 	    CSUMC = CSUMC + CTK*CTMP*CSUMF
 	  ENDDO
 	  TMP = CDABS(CSUMC)
-c	  PRINT *, CSUMC, n, k
-c	  IF (n.NE.k .AND.TMP.GT.1.D-12) PRINT *, CSUMC,n,k,CK(n),CK(k)
+	  PRINT *, CSUMC, n, k
 	ENDDO
       ENDDO
       ENDIF
