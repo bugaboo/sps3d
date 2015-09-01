@@ -15,9 +15,13 @@ C----------------------------
 C  model 2: Yukawa potential
 C----------------------------
       CASE(2)
-      TMP=RAD*DSQRT((DSIN(TET)*DCOS(PHI)/1.D0)**2+
-     & (DSIN(TET)*DSIN(PHI)/2.D0)**2+(DCOS(TET)/3.D0)**2)
-      POT3D=-DEXP(-0.1D0*TMP)/TMP
+      X=DSIN(TET)*DCOS(PHI)
+      Y=DSIN(TET)*DSIN(PHI)
+      Z=DCOS(TET)
+      TX=1.D0
+      TY=1.D0
+      R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
+      POT3D=-DEXP(-0.1D0*R)/R
 C      
 C----------------------------
 C  model 300: Angle test
