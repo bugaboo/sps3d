@@ -1,4 +1,4 @@
-      SUBROUTINE SPSR3D(KOUT,LMAX,NANG,L,M,RADA,NDVR,NTET,NPHI,PIR,
+      SUBROUTINE SPS3D(KOUT,LMAX,NANG,L,M,RADA,NDVR,NTET,NPHI,PIR,
      &                 CK,CE,CVEC,CPHI,NB,NA,NOI)
 C=======================================================================
 C  SPS basis for the R problem with L.GE.0 [PRA 75, 062704 (2007)]

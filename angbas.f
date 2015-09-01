@@ -1,6 +1,6 @@
       MODULE ANGSYM
       CONTAINS
-	SUBROUTINE NULIST(KSYM, L, M, LMAX, NANG)
+	SUBROUTINE ANGBAS(KSYM, L, M, LMAX, NANG, LAN, MAN)
 	IMPLICIT REAL*8 (A-H,O-Z)
 	INTEGER, INTENT(OUT) :: NANG
 	INTEGER, DIMENSION(:), ALLOCATABLE, INTENT(OUT) :: L, M
@@ -20,17 +20,19 @@ C
                   n = n + 1
               ENDDO
           ENDDO  
+C  KSYM=1 Angular symmetry          
 	CASE(1)
 	  NANG = LMAX+1
 	  ALLOCATE(L(NANG), M(NANG))
 	  DO i=1,NANG
 	    L(i) = i-1
-	    M(i) = 0
+	    M(i) = MAN
 	  ENDDO
+C  KSYM=2 Spherical symmetry	  
 	CASE(2)
 	  NANG = 1
 	  ALLOCATE(L(1),M(1))
-	  L(1)=1
+	  L(1)=LAN
 	  M(1)=0
 	END SELECT
 	RETURN
