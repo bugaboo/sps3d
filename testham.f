@@ -13,8 +13,8 @@ C***********************************************************************
       ALLOCATABLE X(:),W(:),T(:,:),DVR(:),PIR(:),RAD(:),CPHI(:)
       ALLOCATABLE CK(:),CE(:),CVEC3D(:,:),CPHI3D(:,:),CVEC(:,:)
       ALLOCATABLE L(:),M(:)
-      NAMELIST /INF/MODEL,RADA,NDVR,KPOL,LAN,MAN,KSYM,KEYA,
-     & 		AMIN,AMAX,NUMA
+      NAMELIST /INF/MODEL,RADA,NDVR,KPOL,LMAX,LAN,MAN,KSYM,NTET,NPHI,
+     & 		KEYA,AMIN,AMAX,NUMA
       COMMON /POT_C/MODEL
       COMMON /POTR_C/MODELR
 C
