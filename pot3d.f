@@ -29,7 +29,7 @@ C----------------------------
       X=8.D0*RAD*DSIN(TET)*DCOS(PHI)
       Y=9.5D0*RAD*DSIN(TET)*DSIN(PHI)
       Z=11.5D0*RAD*DCOS(TET)
-      POT3D=0.5D0(X**2+Y**2+Z**2-2.29D2)
+      POT3D=0.5D0*(X**2+Y**2+Z**2-4.29D2)
 C      
 C----------------------------
 C  model 300: Angle test

@@ -1,5 +1,5 @@
 # Start of the makefile Defining variables
-objects = sps3d.o pot3d.o potmat.o spsodr.o dvrleg.o dvrr.o legpol.o mul_lrs.o symdvr.o VMULSF.o DLGAMMA.o dvrjac.o indexx.o jacpol.o cbespoln.o beszerr.o kestep.o angbas.o gaujac.o polj.o main.o
+objects = sps3d.o pot3d.o potmat.o spsodr.o dvrleg.o dvrr.o legpol.o mul_lrs.o symdvr.o VMULSF.o DLGAMMA.o dvrjac.o indexx.o jacpol.o cbespoln.o beszerr.o kestep.o angbas.o gaujac.o polj.o srad3d.o
 FC = gfortran
 #f77comp = gfortran
 #switch1 = -I/opt/VNI/imsl/fnl600/lnxin100e64/include -L/opt/vni/imsl/fnl600/lnxin100e64/lib -Bdynamic -limsl -limslsuperlu -limslscalar -limslblas -limslmpistub -Xlinker -rpath -Xlinker /opt/vni/imsl/fnl600/lnxin100e64/lib -openmp
@@ -8,8 +8,8 @@ switch2 = -c -fdefault-real-8 -fdefault-double-8
 # Makefile
 sps3d: $(objects)
 	gfortran -o sps3d $(objects) $(switch1)
-main.o: main.f
-	gfortran $(switch2) main.f
+srad3d.o: srad3d.f
+	gfortran $(switch2) srad3d.f
 sps3d.o: sps3d.f
 	gfortran $(switch2) sps3d.f
 pot3d.o: pot3d.f
