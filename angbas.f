@@ -7,7 +7,7 @@
 
 	n = 1
 C
-C     	KSYM = 0 no symmetry
+C  KSYM = 0 no symmetry
 C    	
 	SELECT CASE(KSYM)
 	CASE(0)
@@ -19,17 +19,42 @@ C
                   M(n) = k
                   n = n + 1
               ENDDO
-          ENDDO  
-C  KSYM=1 Angular symmetry          
+          ENDDO
+C  KSYM=+1 Inversion symmetry even
 	CASE(1)
-	  NANG = LMAX+1
+	  LTMP=LMAX/2
+	  NANG=(LTMP+1)*(2*LTMP+1)
+	  ALLOCATE(L(NANG), M(NANG))
+	  DO i = 0, LMAX, 2
+              DO k = -i, i
+                  L(n) = i
+                  M(n) = k
+                  n = n + 1
+              ENDDO
+          ENDDO
+C  KSYM=-1 Inversion symmetry odd
+	CASE(-1)
+	  LTMP=LMAX/2
+	  IF (MOD(LMAX,2).EQ.0) LTMP = LTMP - 1
+	  NANG=(LTMP+1)*(2*LTMP+3)
+	  ALLOCATE(L(NANG), M(NANG))
+	  DO i = 1, LMAX, 2
+              DO k = -i, i
+                  L(n) = i
+                  M(n) = k
+                  n = n + 1
+              ENDDO
+          ENDDO
+C  KSYM=2 Angular symmetry          
+	CASE(2)
+	  NANG = LMAX+1-MAN
 	  ALLOCATE(L(NANG), M(NANG))
 	  DO i=1,NANG
-	    L(i) = i-1
+	    L(i) = i-1+MAN
 	    M(i) = MAN
 	  ENDDO
-C  KSYM=2 Spherical symmetry	  
-	CASE(2)
+C  KSYM=3 Spherical symmetry	  
+	CASE(3)
 	  NANG = 1
 	  ALLOCATE(L(1),M(1))
 	  L(1)=LAN

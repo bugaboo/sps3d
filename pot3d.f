@@ -18,18 +18,18 @@ C----------------------------
       X=DSIN(TET)*DCOS(PHI)
       Y=DSIN(TET)*DSIN(PHI)
       Z=DCOS(TET)
-      TX=0.5D0
-      TY=2.D0
+      TX=1.D0
+      TY=1.D0
       R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
       POT3D=-DEXP(-0.1D0*R)/R
 C----------------------------
-C  model 3: Yukawa potential
+C  model 3: Anizotropic harmonic oscillator
 C----------------------------
       CASE(3)
-      X=8.D0*RAD*DSIN(TET)*DCOS(PHI)
-      Y=9.5D0*RAD*DSIN(TET)*DSIN(PHI)
-      Z=11.5D0*RAD*DCOS(TET)
-      POT3D=0.5D0*(X**2+Y**2+Z**2-4.29D2)
+      X=1.D0*RAD*DSIN(TET)*DCOS(PHI)
+      Y=1.D0*RAD*DSIN(TET)*DSIN(PHI)
+      Z=1.1D0*RAD*DCOS(TET)
+      POT3D=0.5D0*(X**2+Y**2+Z**2-23.1D0)
 C      
 C----------------------------
 C  model 300: Angle test
