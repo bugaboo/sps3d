@@ -200,15 +200,6 @@ C
         CTMP=CSUM/CPHI(n)
         IF(DREAL(CTMP).LT.0.D0) CPHI(n)=-CPHI(n)
       ENDDO
-      PRINT *, "CPHI L"
-      DO n=1,NSPS
-	CSUM=0.D0
-	DO i=1,NDVR
-	  CSUM = CSUM + PIR(i)*CVEC(i,n)
-	ENDDO
-	CSUM=CSUM*RADA
-	PRINT *, CPHI(n), CSUM-CPHI(n)
-      ENDDO
       IF(KOUT.EQ.0) RETURN
 C
 C  Writing out the eigenvalues
