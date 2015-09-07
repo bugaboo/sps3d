@@ -1,5 +1,5 @@
 # Start of the makefile Defining variables
-objects = sps3d.o pot3d.o potmat.o spsodr.o dvrleg.o dvrr.o legpol.o mul_lrs.o symdvr.o VMULSF.o DLGAMMA.o dvrjac.o indexx.o jacpol.o cbespoln.o beszerr.o kestep.o angbas.o gaujac.o polj.o srad3d.o
+objects = sps3d.o pot3d.o cdets.o spro.o ssum3d.o potmat.o spsodr.o dvrleg.o dvrr.o legpol.o mul_lrs.o symdvr.o VMULSF.o DLGAMMA.o dvrjac.o indexx.o jacpol.o cbespoln.o beszerr.o kestep.o angbas.o gaujac.o polj.o srad3d.o
 FC = gfortran
 #f77comp = gfortran
 #switch1 = -I/opt/VNI/imsl/fnl600/lnxin100e64/include -L/opt/vni/imsl/fnl600/lnxin100e64/lib -Bdynamic -limsl -limslsuperlu -limslscalar -limslblas -limslmpistub -Xlinker -rpath -Xlinker /opt/vni/imsl/fnl600/lnxin100e64/lib -openmp
@@ -14,6 +14,12 @@ sps3d.o: sps3d.f
 	gfortran $(switch2) sps3d.f
 pot3d.o: pot3d.f
 	gfortran $(switch2) pot3d.f
+cdets.o: cdets.f
+	gfortran $(switch2) cdets.f
+spro.o: spro.f
+	gfortran $(switch2) spro.f
+ssum3d.o: ssum3d.f
+	gfortran $(switch2) ssum3d.f	
 gaujac.o: gaujac.f
 	gfortran $(switch2) gaujac.f
 polj.o: polj.f

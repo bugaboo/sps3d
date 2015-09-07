@@ -15,10 +15,10 @@ C
 	  ENDDO
 	  CTMP=CBESPOLN(L(nu),(0.D0,1.D0)/CAK/RADA)
 	  CTMP1=CBESPOLN(L(mu),(0.D0,1.D0)/CAK/RADA)
-	  CTMP2=CBESPOLN(L(nu),-(0.D0,1.D0)/CAK/RADA)
-	  CTS=(0.D0,1.D0)**(L(mu)-L(nu)+1)*CAK*CTS/CTMP
-	  IF (nu.EQ.mu) CTS=CTS+CTMP2
-	  CTS=CDEXP(-(0.D0,2.D0)*CAK*RADA)*(-1)**L(nu)*CTS/CTMP1
+	  CTS=(0.D0,1.D0)**(L(mu)+L(nu)+1)*CAK*CTS/CTMP
+	  IF (nu.EQ.mu) CTS=CTS+CBESPOLN(L(nu),-(0.D0,1.D0)/CAK/RADA)
+     &			*(-1)**L(nu)
+	  CTS=CDEXP(-(0.D0,2.D0)*CAK*RADA)*CTS/CTMP1
 	  CS(nu,mu)=CTS
 	ENDDO
       ENDDO
