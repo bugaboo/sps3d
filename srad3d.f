@@ -15,6 +15,7 @@ C***********************************************************************
       NAMELIST /INF3D/MODEL,RADA,NDVR,KPOL,LMAX,LAN,MAN,KSYM,NTET,NPHI,
      & 		KEYA,AMIN,AMAX,NUMA
       COMMON /POT_C/MODEL
+      CHARACTER(LEN=20) :: SPSNAME
 C
 C  Input parameters
 C
@@ -40,6 +41,18 @@ C
       CALL SPRO(RADA,NSPS,CK,CAK,CDETP)
       CDETP = CDETP*CDEXP(-(0.D0,2.D0)*CAK*RADA*(NANG-1))
       PRINT *, "Prod det", CDETP
+      
+C  Printing eigenvalues
+
+      WRITE(SPSNAME,"(A7,I0,A1,I0,A1,I2.2,A1,I2.2)")
+     & "spseig_",KSYM,'_',NDVR,'_',LMAX,'_',INT(RADA)
+      OPEN(1,FILE=SPSNAME)
+      DO n=1,NSPS
+        write(1,77) CK(n),CE(n)
+      ENDDO
+      CLOSE(1)
+C  END
       DEALLOCATE(PIR,CK,CE,CVEC,CPHI,CS,CEL)
- 70   FORMAT(' ground state energy = ',E19.12)      
+ 70   FORMAT(' ground state energy = ',E19.12)
+ 77   FORMAT(4(E19.12,1X))
       END PROGRAM
