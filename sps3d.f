@@ -1,4 +1,4 @@
-      SUBROUTINE SPS3D(KOUT,LMAX,NANG,L,M,RADA,NDVR,NTET,NPHI,PIR,
+      SUBROUTINE SPS3D(LMAX,NANG,L,M,RADA,NDVR,NTET,NPHI,PIR,
      &                 CK,CE,CVEC,CPHI,NB,NA,NOI)
 C=======================================================================
 C  SPS basis for the R problem with L.GE.0 [PRA 75, 062704 (2007)]
@@ -262,16 +262,6 @@ C
 	ENDDO
       ENDDO
       ENDIF
-
-      IF(KOUT.EQ.0) RETURN
-C
-C  Writing out the eigenvalues
-C
-      OPEN(1,FILE='spseig3d')
-      DO n=1,NSPS
-        write(1,77) CK(n),CE(n)
-      ENDDO
-      CLOSE(1)
       
 C
  77   FORMAT(4(E19.12,1X))
