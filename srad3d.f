@@ -36,6 +36,7 @@ C
       IF(NB.GT.0) WRITE(*,70) DREAL(CE(NB))
       CAK=5.D0
       CALL SSUM3D(L,RADA,NSPS,NANG,CK,CPHI,CAK,CS)
+      IF (.NOT. UCHECK(CS,NANG)) PRINT *, "UNITARITY PROBLEM"
       CALL CDETS(CS,CEL,CDET,NANG)
       PRINT *, "Sum det", CDET
       CALL SPRO(RADA,NSPS,CK,CAK,CDETP)
@@ -55,4 +56,27 @@ C  END
       DEALLOCATE(PIR,CK,CE,CVEC,CPHI,CS,CEL)
  70   FORMAT(' ground state energy = ',E19.12)
  77   FORMAT(4(E19.12,1X))
-      END PROGRAM
+ 
+      CONTAINS 
+        FUNCTION UCHECK(CS, NANG)
+          LOGICAL UCHECK
+          DIMENSION CS(NANG, NANG)
+
+
+          UCHECK = .FALSE.
+          DO i = 1, NANG
+            DO j = 1, NANG
+              CTMP = 0.D0
+              DO k = 1, NANG
+                CTMP = CTMP + CS(i,k) * DCONJG(CS(j,k))
+              ENDDO
+              IF (i.EQ.j) CTMP = CTMP - 1.D0
+              IF (CDABS(CTMP) .GT. 1.D-10) THEN
+                PRINT *, "NONUNITARY S MATRIX", i, j, CTMP
+              ENDIF
+            ENDDO
+          ENDDO
+          UCHECK = .TRUE.
+          RETURN 
+        END FUNCTION
+        END PROGRAM

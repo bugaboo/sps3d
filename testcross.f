@@ -1,0 +1,49 @@
+      PROGRAM TESTCROS
+      USE ANGSYM
+      IMPLICIT REAL*8(A,B,D-H,O-Z)
+      IMPLICIT COMPLEX*16(C)
+      PARAMETER(PI=3.141592653589793238462643D0)
+      PARAMETER(N=10000)
+      ALLOCATABLE CK(:),CE(:),CPHI(:,:),CVEC(:,:),CS(:,:), CEL(:)
+      ALLOCATABLE L(:),M(:),PIR(:)
+      COMMON /POT_C/MODEL      
+      
+      MODEL = 200
+      LAN = 2
+      MAN = 0
+      LMAX = 15
+      NDVR = 20
+      NTET = 20
+      NPHI = 20
+      RADA = 1.D0
+      KSYM = 2
+      CALL ANGBAS(KSYM,L,M,LMAX,NANG,LAN,MAN)
+      PRINT *, L(1), M(1)
+      NSPS = 0
+      DO i= 1, NANG
+	NSPS = NSPS + 2 * NDVR + L(i)
+      ENDDO
+      ALLOCATE(CK(NSPS),CE(NSPS),CVEC(NDVR*NANG,NSPS))
+      ALLOCATE(PIR(NDVR),CPHI(NANG,NSPS),CS(NANG,NANG),CEL(NANG))
+      CALL SPS3D(LMAX,NANG,L,M,RADA,NDVR,NTET,NPHI,PIR,CK,
+     &	    CE,CVEC,CPHI,NB,NA,NOI) 
+      
+      STEP = 10.D0 / N
+      OPEN(2, FILE = 'cross')
+      DO i=0, N
+	AK = DBLE(i)*STEP+0.D0;
+	CAK = DCMPLX(AK,0.D0)
+        CALL SSUM3D(L,RADA,NSPS,NANG,CK,CPHI,CAK,CS)
+        SIGT = 0.D0
+        DO mm = -L(1), L(1)
+	  M(1) = mm
+	  SIGT = SIGT + SIGMA(L,M,NANG,CS,AK, 1.D0, 1.D0)
+	ENDDO
+	WRITE(2,77) AK , SIGT
+      ENDDO
+      CLOSE(2)
+      
+      DEALLOCATE(CK, CE, CVEC, PIR, CPHI, CS, CEL)
+ 77   FORMAT(4(E19.12,1X))
+      END
+	

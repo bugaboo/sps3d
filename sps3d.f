@@ -8,7 +8,7 @@ C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A,B,D-H,O-Z)
       IMPLICIT COMPLEX*16 (C)
       PARAMETER(KTEST=0)
-      DIMENSION CZER(LMAX,LMAX)
+      ALLOCATABLE CZER(:,:)
       ALLOCATABLE X(:),W(:),T(:,:),DVR(:)
       DIMENSION CK(*),CE(*),CVEC(NDVR*NANG,*),CPHI(NANG,*),PIR(*)
       DIMENSION L(*),M(*)
@@ -18,20 +18,22 @@ C-----------------------------------------------------------------------
 C
 C  Allocation
 C	
+      
       NDVRS=(NDVR*(NDVR+1))/2
       ALLOCATE(X(NDVR),W(NDVR),T(NDVR+1,NDVR+1),DVR(NDVRS),RAD(NDVR))
-
+      
       NSPS = 0
       DO i= 1, NANG
 	NSPS = NSPS + 2 * NDVR + L(i)
       ENDDO
+      
+c      IF (NSPS.GT.498) CVEC(1,499) = 1.D0
 C
 C  Setting up DVR arrays
 C
       SR=0.5D0*RADA
       NDVR2=2*NDVR
       CALL DVRR(KPOL,0,NDVR,X,W,T,DVR,PIR)
-      TMP=0.5D0*DBLE(LAN*(LAN+1))
       ij=0
       DO j=1,NDVR
         RAD(j)=SR*(1.D0+X(j))
@@ -45,8 +47,8 @@ C        DVR(ij)=DVR(ij)+TMP/RAD(j)/RAD(j)+POTR(RAD(j))
 C
 C  Zeros of the reverse Bessel polynomial
 C
+      ALLOCATE (CZER(LMAX,LMAX))
       CALL BESZERR(CZER,LMAX)
-
 C
 C  Calculating potential
 C
