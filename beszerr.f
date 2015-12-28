@@ -4,6 +4,7 @@
       DIMENSION CZER(LMAX,LMAX)
 
 C --- Reading values
+      IF (LMAX .GT. 28) STOP '*** LMAX IS TOO BIG'
       OPEN(10, file='beszer')
       DO k=1, LMAX
 	DO j=1, k

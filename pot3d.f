@@ -23,20 +23,42 @@ C----------------------------
       R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
       POT3D=-DEXP(-0.1D0*R)/R
 C----------------------------
-C  model 2: Axial Yukawa potential
+C  model 3: Axial Yukawa potential
 C----------------------------
       CASE(3)
       X=DSIN(TET)*DCOS(PHI)
       Y=DSIN(TET)*DSIN(PHI)
       Z=DCOS(TET)
-      TX=0.5D0
-      TY=0.5D0
+      TX=.5D0
+      TY=.5D0
       R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
       POT3D=-DEXP(-0.1D0*R)/R
 C----------------------------
-C  model 4: Anizotropic harmonic oscillator
+C  model 4: Yukawa potential
 C----------------------------
       CASE(4)
+      X=DSIN(TET)*DCOS(PHI)
+      Y=DSIN(TET)*DSIN(PHI)
+      Z=DCOS(TET)
+      TX=1.D0
+      TY=1.D0
+      R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
+      POT3D=-DEXP(-0.1D0*R)/R
+C----------------------------
+C  model 5: Yukawa potential
+C----------------------------
+      CASE(5)
+      X=DSIN(TET)*DCOS(PHI)
+      Y=DSIN(TET)*DSIN(PHI)
+      Z=DCOS(TET)
+      TX=2.D0
+      TY=2.D0
+      R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
+      POT3D=-DEXP(-0.1D0*R)/R
+C----------------------------
+C  model 6: Anizotropic harmonic oscillator
+C----------------------------
+      CASE(6)
       X=0.9D0*RAD*DSIN(TET)*DCOS(PHI)
       Y=1.D0*RAD*DSIN(TET)*DSIN(PHI)
       Z=1.1D0*RAD*DCOS(TET)

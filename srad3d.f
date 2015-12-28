@@ -34,14 +34,14 @@ C
       CALL SPS3D(LMAX,NANG,L,M,RADA,NDVR,NTET,NPHI,PIR,CK,
      &	    CE,CVEC,CPHI,NB,NA,NOI) 
       IF(NB.GT.0) WRITE(*,70) DREAL(CE(NB))
-      CAK=5.D0
+      CAK=0.3D0
       CALL SSUM3D(L,RADA,NSPS,NANG,CK,CPHI,CAK,CS)
       IF (.NOT. UCHECK(CS,NANG)) PRINT *, "UNITARITY PROBLEM"
       CALL CDETS(CS,CEL,CDET,NANG)
-      PRINT *, "Sum det", CDET
+      PRINT *, "Sum det", CDET, AIMAG(CDLOG(CDET))/2.D0
       CALL SPRO(RADA,NSPS,CK,CAK,CDETP)
       CDETP = CDETP*CDEXP(-(0.D0,2.D0)*CAK*RADA*(NANG-1))
-      PRINT *, "Prod det", CDETP
+      PRINT *, "Prod det", CDETP, AIMAG(CDLOG(CDETP))/2.D0
       
 C  Printing eigenvalues
 
@@ -71,7 +71,7 @@ C  END
                 CTMP = CTMP + CS(i,k) * DCONJG(CS(j,k))
               ENDDO
               IF (i.EQ.j) CTMP = CTMP - 1.D0
-              IF (CDABS(CTMP) .GT. 1.D-10) THEN
+              IF (CDABS(CTMP) .GT. 1.D-5) THEN
                 PRINT *, "NONUNITARY S MATRIX", i, j, CTMP
               ENDIF
             ENDDO
@@ -79,4 +79,18 @@ C  END
           UCHECK = .TRUE.
           RETURN 
         END FUNCTION
-        END PROGRAM
+        
+        FUNCTION CONSOLE_INPUT(EMAX, NS)
+	  LOGICAL CONSOLE_INPUT
+	  CHARACTER(LEN=20) :: STR
+	  
+	  CONSOLE_INPUT = .FALSE.
+	  IF (IARGC() .EQ. 0) RETURN
+	  CALL GETARG(1, STR)
+	  READ(STR,*) EMAX
+	  CALL GETARG(2, STR)
+	  READ(STR,*) NS
+	  CONSOLE_INPUT = .TRUE.
+	  RETURN
+        END FUNCTION
+      END PROGRAM

@@ -4,7 +4,7 @@ C  GAUSS-JACOBI ABSCISSAS X(i) AND WEIGHTS W(i); i=1,N
 C  WK(i) - WORKING ARRAY OF DIMENSION.GE.(N+1)
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8(A-H,O-Z)
-      PARAMETER (EPS=1.D-14,ITRMAX=30)
+      PARAMETER (EPS=1.D-14,ITRMAX=150)
       DIMENSION X(*),W(*),WK(*)
 C
       AN=DBLE(N)

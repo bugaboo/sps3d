@@ -1,4 +1,5 @@
       SUBROUTINE POTMAT(NTET,NPHI,RAD,V,NANG,L,M,LMAX)
+      USE OMP_LIB
       IMPLICIT REAL*8 (A,B,D-H,O-Z)
       IMPLICIT COMPLEX*16 (C)
       INTEGER, DIMENSION(NANG) :: L,M
@@ -16,8 +17,11 @@ c
 	  W(j,i) = WT(j)
 	ENDDO
       ENDDO
+      
+!$OMP PARALLEL DEFAULT(PRIVATE) SHARED(NANG,NPHI,NTET,L,M,V,X,W,PI,RAD)
+!$OMP DO
       DO i = 1,NANG
-	DO j = 1,NANG
+        DO j = 1,NANG
 	  SUMP = 0.D0
 	  SUMP1 = 0.D0
 	  DO k = 1,NPHI
@@ -54,6 +58,8 @@ c
 	  V(i,j) = SUMP/DBLE(NPHI)
 	ENDDO
       ENDDO
+!$OMP END DO
+!$OMP END PARALLEL
       DEALLOCATE(X,W,XT,WT,T)
       RETURN
       END
