@@ -6,26 +6,16 @@ C-----------------------------------------------------------------------
       COMMON /POT_C/MODEL
 C
       SELECT CASE(MODEL)
-C-----------------------------
-C  model 1: Coulomb potential
-C-----------------------------
+C----------------------------
+C  model 1: Yukawa potential
+C----------------------------
       CASE(1)
-      POT3D=-1.D0/RAD
-C----------------------------
-C  model 2: Anizotropic Yukawa potential
-C----------------------------
-      CASE(2)
-      X=DSIN(TET)*DCOS(PHI)
-      Y=DSIN(TET)*DSIN(PHI)
-      Z=DCOS(TET)
-      TX=2.D0
-      TY=0.5D0
-      R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
+      R=RAD
       POT3D=-DEXP(-0.1D0*R)/R
 C----------------------------
-C  model 3: Axial Yukawa potential
+C  model 2: Axial Yukawa potential
 C----------------------------
-      CASE(3)
+      CASE(2)
       X=DSIN(TET)*DCOS(PHI)
       Y=DSIN(TET)*DSIN(PHI)
       Z=DCOS(TET)
@@ -34,20 +24,9 @@ C----------------------------
       R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
       POT3D=-DEXP(-0.1D0*R)/R
 C----------------------------
-C  model 4: Yukawa potential
+C  model 3: Yukawa potential
 C----------------------------
-      CASE(4)
-      X=DSIN(TET)*DCOS(PHI)
-      Y=DSIN(TET)*DSIN(PHI)
-      Z=DCOS(TET)
-      TX=1.D0
-      TY=1.D0
-      R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
-      POT3D=-DEXP(-0.1D0*R)/R
-C----------------------------
-C  model 5: Yukawa potential
-C----------------------------
-      CASE(5)
+      CASE(3)
       X=DSIN(TET)*DCOS(PHI)
       Y=DSIN(TET)*DSIN(PHI)
       Z=DCOS(TET)
@@ -55,6 +34,22 @@ C----------------------------
       TY=2.D0
       R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
       POT3D=-DEXP(-0.1D0*R)/R
+C----------------------------
+C  model 4: Anizotropic Yukawa potential
+C----------------------------
+      CASE(4)
+      X=DSIN(TET)*DCOS(PHI)
+      Y=DSIN(TET)*DSIN(PHI)
+      Z=DCOS(TET)
+      TX=2.D0
+      TY=0.5D0
+      R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
+      POT3D=-DEXP(-0.1D0*R)/R
+C-----------------------------
+C  model 5: Coulomb potential
+C-----------------------------
+      CASE(5)
+      POT3D=-1.D0/RAD
 C----------------------------
 C  model 6: Anizotropic harmonic oscillator
 C----------------------------

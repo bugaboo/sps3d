@@ -15,7 +15,7 @@ C***********************************************************************
       NAMELIST /INF3D/MODEL,RADA,NDVR,KPOL,LMAX,LAN,MAN,KSYM,NTET,NPHI,
      & 		KEYA,AMIN,AMAX,NUMA
       COMMON /POT_C/MODEL
-      CHARACTER(LEN=20) :: SPSNAME
+      CHARACTER(LEN=30) :: SPSNAME
 C
 C  Input parameters
 C
@@ -45,8 +45,8 @@ C
       
 C  Printing eigenvalues
 
-      WRITE(SPSNAME,"(A7,I0,A1,I0,A1,I2.2,A1,I2.2)")
-     & "spseig_",KSYM,'_',NDVR,'_',LMAX,'_',INT(RADA)
+      WRITE(SPSNAME,"(A7,I0,A1,I0,A1,I2.2,A1,I2.2,' 'I0)")
+     & "spseig_",KSYM,'_',NDVR,'_',LMAX,'_',INT(RADA),MAN
       OPEN(1,FILE=SPSNAME)
       DO n=1,NSPS
         write(1,77) CK(n),CE(n)
