@@ -15,7 +15,7 @@ C***********************************************************************
       ALLOCATABLE L(:,:),M(:,:),PIR(:), NANG(:), NSPS(:)
       ALLOCATABLE KSYMA(:),LANA(:),MANA(:),LT(:),MT(:),MULTIP(:)
       ALLOCATABLE DELTA(:),CDETP(:), CDELTA(:)
-      NAMELIST /INF3D/MODEL,RADA,NDVR,KPOL,LMAX,LAN,MAN,KSYM,NTET,NPHI,
+      NAMELIST /INF3D/MODEL,RADA,NDVR,LMAX,LAN,MAN,KSYM,NTET,NPHI,
      &             KEYA,AMIN,AMAX,NUMA
       COMMON /POT_C/MODEL
       CHARACTER(LEN=30) :: DELTANAME, FILENAME, TMPNAME

@@ -24,16 +24,15 @@ C
       
       NSPS = 0
       DO i= 1, NANG
-	NSPS = NSPS + 2 * NDVR + L(i)
+        NSPS = NSPS + 2 * NDVR + L(i)
       ENDDO
       
-c      IF (NSPS.GT.498) CVEC(1,499) = 1.D0
 C
 C  Setting up DVR arrays
 C
       SR=0.5D0*RADA
       NDVR2=2*NDVR
-      CALL DVRR(KPOL,0,NDVR,X,W,T,DVR,PIR)
+      CALL DVRR(0,0,NDVR,X,W,T,DVR,PIR)
       ij=0
       DO j=1,NDVR
         RAD(j)=SR*(1.D0+X(j))
@@ -42,7 +41,6 @@ C
           ij=ij+1
           DVR(ij)=DVR(ij)/(RAD(i)*RAD(j))+PIR(i)*PIR(j)
         ENDDO
-C        DVR(ij)=DVR(ij)+TMP/RAD(j)/RAD(j)+POTR(RAD(j))
       ENDDO
 C
 C  Zeros of the reverse Bessel polynomial
@@ -87,7 +85,7 @@ C
 	    HAM(nnu+NDVR+i, nnu+NDVR+j)=TMP
 	    HAM(nnu+NDVR+j, nnu+NDVR+i)=TMP
 	  ENDDO
-	  HAM(nnu+NDVR+j,nnu+j)=HAM(nnu+NDVR+j,nnu+j)-1.D0*
+	  HAM(nnu+NDVR+j,nnu+j)=HAM(nnu+NDVR+j,nnu+j)-
      &		DBLE(L(nu)*(L(nu)+1))/RAD(j)/RAD(j)
 	ENDDO
 	TMP=DSQRT(2.D0/RADA)
@@ -109,7 +107,6 @@ C
 	ENDDO
 	IF(MOD(L(nu),2).EQ.1) THEN
 	  ZER=CZER(L(nu),L(nu)/2+1)
-c	  PRINT *, ZER, L(nu),L(nu)/2+1
 	  DO i=1,NDVR
 	    TMPi=TMP*PIR(i)
 	    HAM(nnu+NDVR+i,nnu+2*NDVR+L(nu))=TMPi
@@ -127,25 +124,6 @@ c	  PRINT *, ZER, L(nu),L(nu)/2+1
 	ENDDO
 	nnu = nnu + 2*NDVR + L(nu)
       ENDDO
-      IF (KTEST.EQ.1) THEN
-      SELECT CASE(L(1))
-	CASE(0)
-	OPEN(2,FILE='ham3d0')
-	CASE(1)
-	OPEN(2,FILE='ham3d1')
-	CASE(2)
-	OPEN(2,FILE='ham3d2')
-	CASE(10)
-	OPEN(2,FILE='ham3d10')
-      END SELECT
-      DO i=1,NSPS
-	DO j=1,NSPS
-	  write(2,77) HAM(i,j)
-	ENDDO
-      ENDDO
-      CLOSE(2)
-      ENDIF
-c      RETURN
 C
 C  Solution of the SPS EVP
 C
@@ -165,6 +143,7 @@ C --- LAPACK
       PRINT *, "Call DGEEV"
       CALL DGEEV('N','V',NSPS,HAM,NSPS,VKR,VKI,ERR,1,WK,NSPS,
      &           VK,NVK,info)
+      PRINT *, "DGEEV done"
       DO n=1,NSPS
         CK(n)=-(0.D0,1.D0)*DCMPLX(VKR(n),VKI(n))
         IF(VKI(n).EQ.0.D0) THEN
@@ -188,40 +167,36 @@ C --- LAPACK
       ENDDO
       DEALLOCATE(VKR,VKI,VK,WK)
       DEALLOCATE(HAM)
-      IF (NANG.EQ.1) THEN
-	DO n=1,NSPS
-C	  IF (DABS(REAL(CK(n))).LT.1D-8) PRINT *, CK(n), n
-	ENDDO
-      ENDIF
 
 C
 C  Ordering the SPS
 C
-      CALL SPSODR(NDVR*NANG,NSPS,CK,CE,CVEC,NB,NA,NOI)
+       CALL SPSODR(NDVR*NANG,NSPS,CK,CE,CVEC,NB,NA,NOI)
       
 C
 C  Normalization
 C
       DO n=1,NSPS
-	CTK = (0.D0,1.D0)*RADA/CK(n)
-	CSUMC = 0.D0
-	DO nu=1,NANG
-	  CTMP=1.D0
-	  DO ip=1,L(nu)
-	    CTMP=CTMP+CZER(L(nu),ip)/((0.D0,1.D0)*CK(n)*RADA+
+        CTK = (0.D0,1.D0)*RADA/CK(n)
+        CSUMC = 0.D0
+        DO nu=1,NANG
+          CTMP=1.D0
+          DO ip=1,L(nu)
+            CTMP=CTMP+CZER(L(nu),ip)/((0.D0,1.D0)*CK(n)*RADA+
      &		CZER(L(nu),ip))**2
-	  ENDDO	  
-	  CSUMF = 0.D0
-	  DO i=1,NDVR
-	    DO j=1,NDVR
-	      CSUMF=CSUMF+CVEC((nu-1)*NDVR+i,n)*PIR(i)*PIR(j)
-     &			*CVEC((nu-1)*NDVR+j,n)
-	    ENDDO
-	    CSUMC = CSUMC + CVEC((nu-1)*NDVR+i,n)**2
-	  ENDDO
-	  CSUMC = CSUMC + CTK*CTMP*CSUMF
-	ENDDO
-	CTMP = CDSQRT(1/CSUMC/SR)
+          ENDDO	  
+          CSUMF = 0.D0
+          DO i=1,NDVR
+            DO j=1,NDVR
+              CSUMF=CSUMF+CVEC((nu-1)*NDVR+i,n)*PIR(i)*PIR(j)
+     &          * CVEC((nu-1)*NDVR+j,n)
+            ENDDO
+            CSUMC = CSUMC + CVEC((nu-1)*NDVR+i,n)**2
+          ENDDO
+          CSUMC = CSUMC + CTK*CTMP*CSUMF
+        ENDDO
+
+        CTMP = CDSQRT(1/CSUMC/SR)
         DO i=1,NDVR*NANG
           CVEC(i,n)=CVEC(i,n)*CTMP
         ENDDO
@@ -240,28 +215,28 @@ C
 C  Checking orthogonality
 C
       DO n=1,10
-	DO k=n,20
-	  CTK = (0.D0,2.D0)*RADA/(CK(n)+CK(k))
-	  CSUMC = 0.D0
-	  DO nu=1,NANG
-	    CTMP=1.D0
-	    DO ip=1,L(nu)
-	      CTMP=CTMP+CZER(L(nu),ip)/((0.D0,1.D0)*CK(n)*RADA+
-     &		CZER(L(nu),ip))/((0.D0,1.D0)*CK(k)*RADA+CZER(L(nu),ip))
-	    ENDDO	  
-	    CSUMF = 0.D0
-	    DO i=1,NDVR
-	      DO j=1,NDVR
-		CSUMF=CSUMF+CVEC((nu-1)*NDVR+i,n)*PIR(i)*PIR(j)
-     &			*CVEC((nu-1)*NDVR+j,k)
-	      ENDDO
-	      CSUMC = CSUMC + CVEC((nu-1)*NDVR+i,n)*CVEC((nu-1)*NDVR+i,k)
-	    ENDDO
-	    CSUMC = CSUMC + CTK*CTMP*CSUMF
-	  ENDDO
-	  TMP = CDABS(CSUMC)
-	  PRINT *, CSUMC, n, k
-	ENDDO
+        DO k=n,20
+          CTK = (0.D0,2.D0)*RADA/(CK(n)+CK(k))
+          CSUMC = 0.D0
+          DO nu=1,NANG
+            CTMP=1.D0
+            DO ip=1,L(nu)
+              CTMP=CTMP+CZER(L(nu),ip)/((0.D0,1.D0)*CK(n)*RADA+
+     &          CZER(L(nu),ip))/((0.D0,1.D0)*CK(k)*RADA+CZER(L(nu),ip))
+            ENDDO         
+            CSUMF = 0.D0
+            DO i=1,NDVR
+              DO j=1,NDVR
+                CSUMF=CSUMF+CVEC((nu-1)*NDVR+i,n)*PIR(i)*PIR(j)
+     &                  *CVEC((nu-1)*NDVR+j,k)
+              ENDDO
+              CSUMC = CSUMC+CVEC((nu-1)*NDVR+i,n)*CVEC((nu-1)*NDVR+i,k)
+            ENDDO
+            CSUMC = CSUMC + CTK*CTMP*CSUMF
+          ENDDO
+          TMP = CDABS(CSUMC)
+          PRINT *, CSUMC, n, k
+        ENDDO
       ENDDO
       ENDIF
       
