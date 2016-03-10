@@ -7,22 +7,25 @@ C-----------------------------------------------------------------------
       IMPLICIT COMPLEX*16 (C)
       DIMENSION CK(*),CPHI(NANG,*),CS(NANG,*), L(NANG)
 C
+!$OMP PARALLEL DEFAULT(PRIVATE) SHARED(NANG,NSPS,CK,CPHI,CAK,CS,L,RADA)
+!$OMP DO
       DO nu=1,NANG
-	DO mu=1,NANG
-	  CTS=0.D0
-	  DO n=1,NSPS
-	    CTS=CTS+CPHI(nu,n)*CPHI(mu,n)/CK(n)/(CK(n)-CAK)
-	  ENDDO
-	  CTMP=CBESPOLN(L(nu),(0.D0,1.D0)/CAK/RADA)
-	  CTMP1=CBESPOLN(L(mu),(0.D0,1.D0)/CAK/RADA)
-	  CTS=(0.D0,1.D0)**(L(mu)+L(nu)+1)*CAK*CTS/CTMP
-	  IF (nu.EQ.mu) CTS=CTS+CBESPOLN(L(nu),-(0.D0,1.D0)/CAK/RADA)
+        DO mu=1,NANG
+          CTS=0.D0
+          DO n=1,NSPS
+            CTS=CTS+CPHI(nu,n)*CPHI(mu,n)/CK(n)/(CK(n)-CAK)
+          ENDDO
+          CTMP=CBESPOLN(L(nu),(0.D0,1.D0)/CAK/RADA)
+          CTMP1=CBESPOLN(L(mu),(0.D0,1.D0)/CAK/RADA)
+          CTS=(0.D0,1.D0)**(L(mu)+L(nu)+1)*CAK*CTS/CTMP
+          IF (nu.EQ.mu) CTS=CTS+CBESPOLN(L(nu),-(0.D0,1.D0)/CAK/RADA)
      &			*(-1)**L(nu)
-	  CTS=CDEXP(-(0.D0,2.D0)*CAK*RADA)*CTS/CTMP1
-	  CS(nu,mu)=CTS
-	ENDDO
+          CTS=CDEXP(-(0.D0,2.D0)*CAK*RADA)*CTS/CTMP1
+          CS(nu,mu)=CTS
+        ENDDO
       ENDDO
-      
+!$OMP END DO
+!$OMP END PARALLEL      
 C
       RETURN
       END

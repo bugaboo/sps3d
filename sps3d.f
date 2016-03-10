@@ -17,7 +17,7 @@ C-----------------------------------------------------------------------
       
 C
 C  Allocation
-C	
+C      
       
       NDVRS=(NDVR*(NDVR+1))/2
       ALLOCATE(X(NDVR),W(NDVR),T(NDVR+1,NDVR+1),DVR(NDVRS),RAD(NDVR))
@@ -52,12 +52,12 @@ C  Calculating potential
 C
       ALLOCATE(VT(NANG,NANG),V(NANG,NANG,NDVR))
       DO k=1,NDVR
-	CALL POTMAT(NTET,NPHI,RAD(k),VT,NANG,L,M,LMAX)
-	DO i=1,NANG
-	  DO j=1,NANG
-	  V(i,j,k) = VT(i,j)
-	  ENDDO 
-	ENDDO
+      CALL POTMAT(NTET,NPHI,RAD(k),VT,NANG,L,M,LMAX)
+      DO i=1,NANG
+        DO j=1,NANG
+        V(i,j,k) = VT(i,j)
+        ENDDO 
+      ENDDO
       ENDDO
 C
 C  Setting up SPS Hamiltonian
@@ -71,58 +71,58 @@ C
       nnu = 0
       DO nu = 1, NANG
         DO i=1,NDVR
-	  HAM(nnu+i, nnu+NDVR+i)=1.D0
-	ENDDO
+        HAM(nnu+i, nnu+NDVR+i)=1.D0
+      ENDDO
 
-	ij=0
-	DO j=1,NDVR
-	  DO i=1,j
-	    ij=ij+1
-	    TMP=-2.D0*DVR(ij)
-	    HAM(nnu+NDVR+i, nnu+j)=TMP
-	    HAM(nnu+NDVR+j, nnu+i)=TMP
-	    TMP=2.D0*RADA*PIR(i)*PIR(j)
-	    HAM(nnu+NDVR+i, nnu+NDVR+j)=TMP
-	    HAM(nnu+NDVR+j, nnu+NDVR+i)=TMP
-	  ENDDO
-	  HAM(nnu+NDVR+j,nnu+j)=HAM(nnu+NDVR+j,nnu+j)-
-     &		DBLE(L(nu)*(L(nu)+1))/RAD(j)/RAD(j)
-	ENDDO
-	TMP=DSQRT(2.D0/RADA)
-	DO ip = 1, L(nu)/2
-	  ip1=NDVR2+2*ip-1
-	  ip2=ip1+1
-	  ZER1=DREAL(CZER(L(nu),ip))
-	  ZER2=DIMAG(CZER(L(nu),ip))
-	  DO i=1,NDVR
-	    TMPi=TMP*PIR(i)
-	    HAM(nnu+NDVR+i,nnu+ip1)=2.D0*TMPi
-	    HAM(nnu+ip1,nnu+i)=-ZER1*TMPi
-	    HAM(nnu+ip2,nnu+i)=-ZER2*TMPi
-	  ENDDO
-	  HAM(nnu+ip1,nnu+ip1)=-ZER1/RADA
-	  HAM(nnu+ip1,nnu+ip2)=+ZER2/RADA
-	  HAM(nnu+ip2,nnu+ip1)=-ZER2/RADA
-	  HAM(nnu+ip2,nnu+ip2)=-ZER1/RADA
-	ENDDO
-	IF(MOD(L(nu),2).EQ.1) THEN
-	  ZER=CZER(L(nu),L(nu)/2+1)
-	  DO i=1,NDVR
-	    TMPi=TMP*PIR(i)
-	    HAM(nnu+NDVR+i,nnu+2*NDVR+L(nu))=TMPi
-	    HAM(nnu+2*NDVR+L(nu),nnu+i)=-ZER*TMPi
-	  ENDDO
-	  HAM(nnu+2*NDVR+L(nu),nnu+2*NDVR+L(nu))=-ZER/RADA
-	ENDIF
-	
-	nmu = 0
-	DO mu = 1, NANG
-	  DO i = 1,NDVR
-	    HAM(nnu+NDVR+i,nmu+i)=HAM(nnu+NDVR+i,nmu+i)-2.D0*V(nu,mu,i)
-	  ENDDO
-	nmu = nmu + 2*NDVR + L(mu)
-	ENDDO
-	nnu = nnu + 2*NDVR + L(nu)
+      ij=0
+      DO j=1,NDVR
+        DO i=1,j
+          ij=ij+1
+          TMP=-2.D0*DVR(ij)
+          HAM(nnu+NDVR+i, nnu+j)=TMP
+          HAM(nnu+NDVR+j, nnu+i)=TMP
+          TMP=2.D0*RADA*PIR(i)*PIR(j)
+          HAM(nnu+NDVR+i, nnu+NDVR+j)=TMP
+          HAM(nnu+NDVR+j, nnu+NDVR+i)=TMP
+        ENDDO
+        HAM(nnu+NDVR+j,nnu+j)=HAM(nnu+NDVR+j,nnu+j)-
+     &            DBLE(L(nu)*(L(nu)+1))/RAD(j)/RAD(j)
+      ENDDO
+      TMP=DSQRT(2.D0/RADA)
+      DO ip = 1, L(nu)/2
+        ip1=NDVR2+2*ip-1
+        ip2=ip1+1
+        ZER1=DREAL(CZER(L(nu),ip))
+        ZER2=DIMAG(CZER(L(nu),ip))
+        DO i=1,NDVR
+          TMPi=TMP*PIR(i)
+          HAM(nnu+NDVR+i,nnu+ip1)=2.D0*TMPi
+          HAM(nnu+ip1,nnu+i)=-ZER1*TMPi
+          HAM(nnu+ip2,nnu+i)=-ZER2*TMPi
+        ENDDO
+        HAM(nnu+ip1,nnu+ip1)=-ZER1/RADA
+        HAM(nnu+ip1,nnu+ip2)=+ZER2/RADA
+        HAM(nnu+ip2,nnu+ip1)=-ZER2/RADA
+        HAM(nnu+ip2,nnu+ip2)=-ZER1/RADA
+      ENDDO
+      IF(MOD(L(nu),2).EQ.1) THEN
+        ZER=CZER(L(nu),L(nu)/2+1)
+        DO i=1,NDVR
+          TMPi=TMP*PIR(i)
+          HAM(nnu+NDVR+i,nnu+2*NDVR+L(nu))=TMPi
+          HAM(nnu+2*NDVR+L(nu),nnu+i)=-ZER*TMPi
+        ENDDO
+        HAM(nnu+2*NDVR+L(nu),nnu+2*NDVR+L(nu))=-ZER/RADA
+      ENDIF
+      
+      nmu = 0
+      DO mu = 1, NANG
+        DO i = 1,NDVR
+          HAM(nnu+NDVR+i,nmu+i)=HAM(nnu+NDVR+i,nmu+i)-2.D0*V(nu,mu,i)
+        ENDDO
+      nmu = nmu + 2*NDVR + L(mu)
+      ENDDO
+      nnu = nnu + 2*NDVR + L(nu)
       ENDDO
 C
 C  Solution of the SPS EVP
@@ -147,22 +147,22 @@ C --- LAPACK
       DO n=1,NSPS
         CK(n)=-(0.D0,1.D0)*DCMPLX(VKR(n),VKI(n))
         IF(VKI(n).EQ.0.D0) THEN
-	  nnu = 0
-	  DO nu = 0, NANG-1
-	    DO i=1,NDVR
-	      CVEC(nu*NDVR+i,n)=DCMPLX(WK(nnu+i,n),0.D0)
-	    ENDDO
-	    nnu = nnu + 2*NDVR + L(nu+1)
-	  ENDDO
+        nnu = 0
+        DO nu = 0, NANG-1
+          DO i=1,NDVR
+            CVEC(nu*NDVR+i,n)=DCMPLX(WK(nnu+i,n),0.D0)
+          ENDDO
+          nnu = nnu + 2*NDVR + L(nu+1)
+        ENDDO
         ELSE IF(VKI(n).GT.0.D0) THEN
-	  nnu = 0
-	  DO nu = 0, NANG-1
-	    DO i=1,NDVR
-	      CVEC(nu*NDVR+i,n)  =DCMPLX(WK(nnu+i,n),+WK(nnu+i,n+1))
-	      CVEC(nu*NDVR+i,n+1)=DCMPLX(WK(nnu+i,n),-WK(nnu+i,n+1))
-	    ENDDO
-	    nnu = nnu + 2*NDVR + L(nu+1)
-	  ENDDO
+        nnu = 0
+        DO nu = 0, NANG-1
+          DO i=1,NDVR
+            CVEC(nu*NDVR+i,n)  =DCMPLX(WK(nnu+i,n),+WK(nnu+i,n+1))
+            CVEC(nu*NDVR+i,n+1)=DCMPLX(WK(nnu+i,n),-WK(nnu+i,n+1))
+          ENDDO
+          nnu = nnu + 2*NDVR + L(nu+1)
+        ENDDO
         ENDIF
       ENDDO
       DEALLOCATE(VKR,VKI,VK,WK)
@@ -183,8 +183,8 @@ C
           CTMP=1.D0
           DO ip=1,L(nu)
             CTMP=CTMP+CZER(L(nu),ip)/((0.D0,1.D0)*CK(n)*RADA+
-     &		CZER(L(nu),ip))**2
-          ENDDO	  
+     &            CZER(L(nu),ip))**2
+          ENDDO        
           CSUMF = 0.D0
           DO i=1,NDVR
             DO j=1,NDVR
@@ -202,11 +202,11 @@ C
         ENDDO
         
         DO nu=1,NANG
-	  CPHI(nu,n)=0.D0
-	  DO i=1,NDVR
-	    CPHI(nu,n)=CPHI(nu,n)+CVEC((nu-1)*NDVR+i,n)*PIR(i)
-	  ENDDO
-	  CPHI(nu,n)=CPHI(nu,n)*RADA
+        CPHI(nu,n)=0.D0
+        DO i=1,NDVR
+          CPHI(nu,n)=CPHI(nu,n)+CVEC((nu-1)*NDVR+i,n)*PIR(i)
+        ENDDO
+        CPHI(nu,n)=CPHI(nu,n)*RADA
         ENDDO
       ENDDO
       

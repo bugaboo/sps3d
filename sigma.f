@@ -7,15 +7,15 @@
       SIGMA = 0.D0
       CK = DCMPLX(0.D0, 2.D0*PI/AK)
       DO i = 1, NANG
-	CF = 0.D0
-	DO j = 1, NANG
-	  CT = -CS(i, j)
-	  IF (i.EQ.j) CT = CT + 1.D0
-	  CT = CT * CK
-	  CF=CF+CDEXP(DCMPLX(0.D0,PI*L(j)/2.D0))*CT*
+        CF = 0.D0
+        DO j = 1, NANG
+          CT = -CS(i, j)
+          IF (i.EQ.j) CT = CT + 1.D0
+          CT = CT * CK
+          CF=CF+CDEXP(DCMPLX(0.D0,PI*L(j)/2.D0))*CT*
      &		 REHARM(L(j), M(j),TET,PHI)
-	ENDDO
-	SIGMA = SIGMA + CDABS(CF)**2
+        ENDDO
+        SIGMA = SIGMA + CDABS(CF)**2
       ENDDO
       RETURN
       END FUNCTION

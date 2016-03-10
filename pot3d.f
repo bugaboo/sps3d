@@ -24,7 +24,7 @@ C----------------------------
       R=RAD*DSQRT(X**2/TX+Y**2/TY+Z**2)
       POT3D=-DEXP(-0.1D0*R)/R
 C----------------------------
-C  model 3: Yukawa potential
+C  model 3: Axial Yukawa potential
 C----------------------------
       CASE(3)
       X=DSIN(TET)*DCOS(PHI)
